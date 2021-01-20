@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import s from "./contactForm.module.css";
 
 export default class ContactForm extends Component {
   state = {
@@ -8,24 +9,43 @@ export default class ContactForm extends Component {
 
   handleNameInput = (e) => {
     const { name, value } = e.target;
-
     console.log(name, value);
     this.setState({ [name]: value });
   };
 
+  resetForm = () => {
+    this.setState({ name: "", number: "" });
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onAddContact(this.state.name, this.state.number);
-    this.setState({ name: "", number: "" });
+    const { name, number } = this.state;
+    const { onAddContact } = this.props;
+    const isValidForm = this.handleValidForm();
+    if (isValidForm) {
+      onAddContact(name, number);
+    }
+    return this.resetForm();
+  };
+
+  handleValidForm = () => {
+    const { name, number } = this.state;
+    const { onCheckUnique } = this.props;
+    if (!name || !number) {
+      alert("some field is empty");
+      return false;
+    }
+    return onCheckUnique(name);
   };
 
   render() {
     const { name, number } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className={s.form} onSubmit={this.handleSubmit}>
         <label>
           Name
           <input
+            className={s.input}
             type="text"
             name="name"
             placeholder="enter name"
@@ -36,14 +56,17 @@ export default class ContactForm extends Component {
         <label>
           Number
           <input
-            type="phone"
+            className={s.input}
+            type="tel"
             name="number"
             placeholder="enter number"
             value={number}
             onChange={this.handleNameInput}
           />
         </label>
-        <button type="submit">Add contact</button>
+        <button className={s.button} type="submit">
+          Add contact
+        </button>
       </form>
     );
   }
