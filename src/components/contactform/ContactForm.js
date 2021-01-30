@@ -9,7 +9,7 @@ export default class ContactForm extends Component {
 
   handleNameInput = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    // console.log(name, value);
     this.setState({ [name]: value });
   };
 

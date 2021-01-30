@@ -16,6 +16,23 @@ export default class App extends Component {
     filter: "",
   };
 
+  componentDidMount() {
+    const enteredContacts = localStorage.getItem("contacts");
+    if (enteredContacts) {
+      this.setState({ contacts: JSON.parse(enteredContacts) });
+    }
+  }
+
+  componentDidUpdate(prevProps, PrevState) {
+    console.log("ComponentDidUpdate");
+    // console.log("PrevState:", PrevState);
+    // console.log("this.state:", this.state);
+
+    if (PrevState.contacts !== this.state.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
+
   addContact = (name, number) => {
     const contact = {
       id: uuid(),
